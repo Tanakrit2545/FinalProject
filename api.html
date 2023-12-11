@@ -1,0 +1,258 @@
+<html><head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <title>Portfolio Nattapon-Noitharong</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+
+        .bar a {
+            font-size: 26px;
+            color: rgb(26, 26, 26);
+            /* font-weight: bold;  */
+           
+        }
+
+        body,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Montserrat", sans-serif;
+            margin: 0;
+            padding: 0;
+            
+        }
+
+        .w3-sidebar {
+            width: 120px;
+            background: #000000;
+            position: fixed;
+            z-index: 1;
+            height: 100%;
+            overflow: auto;
+            margin-top: 100px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .w3-top,
+            #main {
+                margin-left: 100;
+            }
+        }
+    </style>
+</head>
+
+<body class="w3-black">
+
+
+
+    <div class="bar">
+        <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+          <a href="#home" class="w3-bar-item w3-button"><b>Api</b width></a>
+          <div class="w3-right w3-hide-small">
+              <a href="index.html" class="w3-bar-item w3-button">About me</a>
+              <a href="contact.html" class="w3-bar-item w3-button">Contact</a>
+              <a href="java.html" class="w3-bar-item w3-button">Java</a>
+              <a href="api.html" class="w3-bar-item w3-button">Api</a>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="w3-padding-large" id="main">
+      <hr>
+
+      <h2>Click to get a Random Image</h2>
+      <img id="randomImage" src="https://source.unsplash.com/random/300x300" alt="Random Image">
+      <button onclick="getRandomImage()">Get Random Image</button>
+
+ <hr>
+<h2>Click to get a Random Country Name</h2>
+<p id="randomCountry">Country name will appear here</p>
+<button onclick="getRandomCountry()">Get Random Country</button>
+  <hr>
+    <form method="POST" action="https://script.google.com/macros/s/AKfycbzuIUI7lBUhGDQm9N4mplWbbFEV1a1CNSxtt-irq2iomUbqK0U5_4Udc4n9MJaUa9g5tg/exec">
+<label for="email">Email</label>
+<input name="email" type="email" required="">
+
+<label for="name">Name</label>
+<input name="name" type="text" required="">
+
+
+<button type="submit">Send</button>
+</form>
+<br>
+<iframe width="400" height="300" src="https://docs.google.com/spreadsheets/d/1CFLhjxgWGxmFMtYWuKVhhAw9r_f4JozUXTWruM7NTiQ/edit#gid=0"></iframe>
+<hr>      
+<hr>
+
+<h2>Coinbase API Demo</h2>
+<div id="lastUpdateTime"><p>Last Update Time: 1:01:06 PM</p></div>
+<div id="prices"><p>1 USDT can buy:</p><ul><li>BTC: 0.000023800564597</li><li>ETH: 0.0004444602474755</li><li>XRP: 1.5919764387487065</li><li>LTC: 0.013578314888994516165</li><li>DOGE: 10.1214574898785425</li><li>BCH: 0.0042414056369690309775</li><li>BNB: N/A</li><li>LINK: 0.0661375661375661</li><li>XLM: 7.9428117553613979</li></ul></div>
+<hr>
+  </div> 
+      <script>
+
+
+        function getRandomImage() {
+
+    const randomNumber = Math.floor(Math.random() * 100); 
+    const randomImageUrl = `https://source.unsplash.com/300x300/?random&${randomNumber}`; 
+
+    document.getElementById("randomImage").src = randomImageUrl;
+  }
+function getRandomCountry() {
+    fetch("https://restcountries.com/v3.1/all")
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        const randomIndex = Math.floor(Math.random() * data.length);
+        const randomCountry = data[randomIndex].name.common;
+
+        document.getElementById("randomCountry").textContent = `Random Country: ${randomCountry}`;
+      })
+      .catch(function(error) {
+        console.log("Error fetching country data:", error);
+      });
+  }
+
+function fetchPrices() {
+    var now = new Date();
+    var currentTime = now.toLocaleTimeString();
+
+    fetch('https://api.coinbase.com/v2/exchange-rates?currency=USDT')
+        .then(response => response.json())
+        .then(data => {
+            displayPrices(data);
+            displayLastUpdateTime(currentTime);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            alert('Error fetching data. Please try again.');
+        });
+}
+
+
+
+function displayPrices(data) {
+    var pricesDiv = document.getElementById('prices');
+    var rates = data.data.rates;
+
+    var currencies = ['BTC', 'ETH', 'XRP', 'LTC', 'DOGE', 'BCH', 'BNB', 'LINK', 'XLM'];
+    var pricesHtml = '<p>1 USDT can buy:</p><ul>';
+
+    currencies.forEach(currency => {
+        if (rates[currency]) {
+            pricesHtml += `<li>${currency}: ${rates[currency]}</li>`;
+        } else {
+            pricesHtml += `<li>${currency}: N/A</li>`;
+        }
+    });
+
+    pricesHtml += '</ul>';
+    pricesDiv.innerHTML = pricesHtml;
+}
+
+function displayLastUpdateTime(currentTime) {
+    var updateTimeDiv = document.getElementById('lastUpdateTime');
+    updateTimeDiv.innerHTML = `<p>Last Update Time: ${currentTime}</p>`;
+}
+
+fetchPrices();
+
+setInterval(fetchPrices, 3000);
+</script>
+        <hr>
+    
+    <script>
+      
+
+        function getRandomImage() {
+
+            const randomNumber = Math.floor(Math.random() * 100); 
+            const randomImageUrl = `https://source.unsplash.com/300x300/?random&${randomNumber}`;
+            document.getElementById("randomImage").src = randomImageUrl;
+        }
+
+        function getRandomCountry() {
+            fetch("https://restcountries.com/v3.1/all")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    const randomIndex = Math.floor(Math.random() * data.length);
+                    const randomCountry = data[randomIndex].name.common;
+
+                    document.getElementById("randomCountry").textContent = `Random Country: ${randomCountry}`;
+                })
+                .catch(function(error) {
+                    console.log("Error fetching country data:", error);
+                });
+        }
+
+        function fetchPrices() {
+            var now = new Date();
+            var currentTime = now.toLocaleTimeString();
+
+            fetch('https://api.coinbase.com/v2/exchange-rates?currency=USDT')
+                .then(response => response.json())
+                .then(data => {
+                    displayPrices(data);
+                    displayLastUpdateTime(currentTime);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    alert('Error fetching data. Please try again.');
+                });
+        }
+
+
+
+        function displayPrices(data) {
+            var pricesDiv = document.getElementById('prices');
+            var rates = data.data.rates;
+
+            var currencies = ['BTC', 'ETH', 'XRP', 'LTC', 'DOGE', 'BCH', 'BNB', 'LINK', 'XLM'];
+            var pricesHtml = '<p>1 USDT can buy:</p><ul>';
+
+            currencies.forEach(currency => {
+                if (rates[currency]) {
+                    pricesHtml += `<li>${currency}: ${rates[currency]}</li>`;
+                } else {
+                    pricesHtml += `<li>${currency}: N/A</li>`;
+                }
+            });
+
+            pricesHtml += '</ul>';
+            pricesDiv.innerHTML = pricesHtml;
+        }
+
+        function displayLastUpdateTime(currentTime) {
+            var updateTimeDiv = document.getElementById('lastUpdateTime');
+            updateTimeDiv.innerHTML = `<p>Last Update Time: ${currentTime}</p>`;
+        }
+
+        fetchPrices();
+
+        setInterval(fetchPrices, 3000);
+    </script>
+
+    <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge" c="">
+        <i class="fa fa-facebook-official w3-hover-opacity"></i>
+        <i class="fa fa-instagram w3-hover-opacity"></i>
+        <i class="fa fa-snapchat w3-hover-opacity"></i>
+        <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+        <i class="fa fa-twitter w3-hover-opacity"></i>
+        <i class="fa fa-linkedin w3-hover-opacity"></i>
+        <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+
+    </footer>
+</body>
+</html>
